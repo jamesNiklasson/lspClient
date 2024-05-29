@@ -40,12 +40,21 @@
     <ClInclude Include="..\src\PluginInterface.h" />
     <ClInclude Include="..\src\Scintilla.h" />
     <ClInclude Include="..\src\Sci_Position.h" />
+    <ClInclude Include="..\src\LspClientFeatures\Logging.h" />
+    <ClInclude Include="..\src\LspClientFeatures\Test.h" />
+    <ClInclude Include="..\src\LspClientFeatures\Defines.h" />
+    <ClInclude Include="..\src\LspClientFeatures\LspMessages.h" />
+    <ClInclude Include="..\src\nlohmann\json.hpp" />
+    <ClInclude Include="..\src\nlohmann\json_fwd.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\DockingFeature\GoToLineDlg.cpp" />
     <ClCompile Include="..\src\DockingFeature\StaticDialog.cpp" />
     <ClCompile Include="..\src\NppPluginDemo.cpp" />
     <ClCompile Include="..\src\PluginDefinition.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\Logging.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\Test.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\LspMessages.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\DockingFeature\goLine.rc" />
@@ -220,6 +229,7 @@ copy ..\readme.FIRST ..\bin\readme.FIRST</Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NPPPLUGINTEMPLATE_EXPORTS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

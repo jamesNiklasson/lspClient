@@ -17,6 +17,8 @@
 
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
+#include "LspClientFeatures\Logging.h"
+#include "LspClientFeatures\Test.h"
 
 //
 // The plugin data that Notepad++ needs
@@ -33,6 +35,14 @@ NppData nppData;
 // It will be called while plugin loading   
 void pluginInit(HANDLE /*hModule*/)
 {
+	logInit();
+	
+	//Start language server
+	
+	
+	//Start listener thread
+	
+	//Send init message
 }
 
 //
@@ -40,6 +50,7 @@ void pluginInit(HANDLE /*hModule*/)
 //
 void pluginCleanUp()
 {
+	logExit();
 }
 
 //
@@ -60,6 +71,9 @@ void commandMenuInit()
     //            );
     setCommand(0, TEXT("Hello Notepad++"), hello, NULL, false);
     setCommand(1, TEXT("Hello (with dialog)"), helloDlg, NULL, false);
+	setCommand(2, TEXT("Write to log file"), logHello, NULL, false);
+	setCommand(3, TEXT("Log document writeup"), logDocumentPath, NULL, false);
+	setCommand(4, TEXT("Log an init message"), logInitMessage, NULL, false);
 }
 
 //
@@ -74,7 +88,7 @@ void commandMenuCleanUp()
 //
 // This function help you to initialize your plugin commands
 //
-bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk, bool check0nInit) 
+bool setCommand(size_t index, const TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk, bool check0nInit) 
 {
     if (index >= nbFunc)
         return false;

@@ -16,6 +16,7 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "PluginDefinition.h"
+#include "LspClientFeatures\Test.h"
 
 extern FuncItem funcItem[nbFunc];
 extern NppData nppData;
@@ -73,6 +74,12 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 		case NPPN_SHUTDOWN:
 		{
 			commandMenuCleanUp();
+		}
+		break;
+		
+		case NPPN_FILEOPENED:
+		{
+			documentOpenAction();
 		}
 		break;
 
