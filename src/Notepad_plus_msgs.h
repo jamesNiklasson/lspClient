@@ -1172,3 +1172,8 @@ enum Platform { PF_UNKNOWN, PF_X86, PF_X64, PF_IA64, PF_ARM64 };
 	//scnNotification->nmhdr.code = NPPN_EXTERNALLEXERBUFFER;
 	//scnNotification->nmhdr.hwndFrom = hwndNpp;
 	//scnNotification->nmhdr.idFrom = BufferID; //where pluginMessage is pointer of type wchar_t
+	
+	#define NPPN_GLOBALMODIFIED (NPPN_FIRST + 30)	//To notify plugins that the current document is just modified by Replace All action. (New in v8.6.5.)
+	//scnNotification->nmhdr.code = NPPN_FILESAVED;
+	//scnNotification->nmhdr.hwndFrom = BufferID;
+	//scnNotification->nmhdr.idFrom = 0;

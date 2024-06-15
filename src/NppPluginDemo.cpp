@@ -16,11 +16,15 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "PluginDefinition.h"
+#include "LspClientFeatures\Defines.h"
 #include "LspClientFeatures\Test.h"
+#include "LspClientFeatures\Logging.h"
+#include "LspClientFeatures\NppActions.h"
 
 extern FuncItem funcItem[nbFunc];
 extern NppData nppData;
-
+extern OpenTextDocument openTextDocumentsList[]; 
+extern bool shuttingDown;
 
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  reasonForCall, LPVOID /*lpReserved*/)
 {
@@ -66,28 +70,58 @@ extern "C" __declspec(dllexport) FuncItem * getFuncsArray(int *nbF)
 	return funcItem;
 }
 
-
 extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 {
 	switch (notifyCode->nmhdr.code) 
 	{
 		case NPPN_SHUTDOWN:
 		{
+			shutdownLangServer();
 			commandMenuCleanUp();
 		}
 		break;
 		
-		case NPPN_FILEOPENED:
+		case NPPN_BEFORESHUTDOWN:
+			shuttingDown = true;
+			break;
+			
+		case NPPN_BUFFERACTIVATED:
 		{
-			documentOpenAction();
-		}
-		break;
+			if (shuttingDown) return;
+			TCHAR filePathBuffer[MAX_PATH];
+			if (!((bool)::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, (WPARAM)MAX_PATH, (LPARAM)filePathBuffer))) {
+				logWrite("Error: Read document path from NPP failed");
+				::MessageBox(NULL, TEXT("Communication with NPP failed"), TEXT("Error"), MB_OK);
+			}
+			std::string filePath = stringFromTcharArray(filePathBuffer);
+			for (int i = 0; i < MAXOPENTEXTDOCUMENTS; i++) {
+				if ((filePath == openTextDocumentsList[i].uri) && openTextDocumentsList[i].open) {
+					return;
+				}
+			}
+			didOpenTextDocument();
+		} break;
+		
+		case NPPN_GLOBALMODIFIED:
+			if (shuttingDown) return;
+			// didChangeTextDocument(); 
+			break;
+		
+		case SCN_MODIFIED:
+			if (shuttingDown) return;
+			if ((notifyCode->modificationType) & (0x01 | 0x02)) {
+				didChangeTextDocument();
+			}
+			break;
+			
+		case NPPN_READY:
+			logSomething();
+			break;
 
 		default:
 			return;
 	}
 }
-
 
 // Here you can process the Npp Messages 
 // I will make the messages accessible little by little, according to the need of plugin development.

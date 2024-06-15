@@ -13,6 +13,19 @@
 #include "..\nlohmann\json.hpp"
 using json = nlohmann::json;
 
+typedef enum {
+	C,
+	Cpp,
+	Csharp
+} LanguageId;
+
+typedef struct {
+	std::string uri;
+	LanguageId languageId;
+	int version;
+	std::string text;
+} TextDocumentItem;
+
 typedef struct {
 	std::string uri;
 	std::string name;
@@ -65,14 +78,7 @@ typedef enum {
 //InitializeParams
 typedef struct {
 	int processId;
-	
-	struct {
-		std::string name;
-		std::string version;
-	} clientInfo;
-	
-	std::string locale;
-	
+		
 	//ClientCapabilities
 	struct {
 		//Workspace capabilities
@@ -161,25 +167,43 @@ typedef struct {
 			std::vector<PositionEncodingKind> positionEncodings;
 		} general;
 	} capabilities;
-	
-	std::vector<WorkspaceFolder> workspaceFolders;
 } InitializeParams;
 
+typedef struct {
+	TextDocumentItem textDocument;
+} DidOpenTextDocumentParams;
+
+typedef struct {
+	struct {
+		std::string uri;
+		int version;
+	} textDocument;
+	
+	struct {
+		std::string text;
+	} contentChanges[1];
+} DidChangeTextDocumentParams;
 
 //this is hands-down the weirdest fucking fix I've ver seen, but it works :)
 typedef struct {
 	int id;
 } AlternativeMessageId;
 
-typedef std::variant<InitializeParams> MessageParams;
+typedef std::variant<DidChangeTextDocumentParams, DidOpenTextDocumentParams, InitializeParams, std::string> MessageParams;
 typedef std::variant<AlternativeMessageId, int, std::string> MessageId;
 
 typedef struct {
 	std::string jsonrpc;
 	MessageId id;
 	std::string method;
-	MessageParams messageParams;
+	MessageParams params;
 } RequestMessage;
+
+typedef struct {
+	std::string jsonrpc;
+	std::string method;
+	MessageParams params;
+} NotificationMessage;
 
 void to_json(json& j, const MessageId& id);
 void to_json(json& j, const WorkspaceFolder& workspaceFolder);
@@ -190,5 +214,10 @@ void to_json(json& j, const PositionEncodingKind& positionEncodingKind);
 void to_json(json& j, const InitializeParams& initializeParams);
 void to_json(json& j, const MessageParams& messageParams);
 void to_json(json& j, const RequestMessage& requestMessage);
+void to_json(json& j, const NotificationMessage& notificationMessage);
+void to_json(json& j, const TextDocumentItem& textDocumentItem);
+void to_json(json& j, const DidOpenTextDocumentParams& didOpenTextDocumentParams);
+void to_json(json& j, const LanguageId& languageId);
+void to_json(json& j, const DidChangeTextDocumentParams& didChangeTextDocumentParams);
 
 #endif

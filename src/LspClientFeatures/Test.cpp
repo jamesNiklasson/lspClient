@@ -12,6 +12,7 @@ using json = nlohmann::json;
 
 #include <stdio.h>
 #include <variant>
+#include <windows.h>
 
 extern NppData nppData;
 
@@ -60,103 +61,14 @@ void documentOpenAction(void) {
 	logDocumentPath();
 }
 
-void logInitMessage(void) {
-	InitializeParams params = {
-		.processId = 0,
-		.clientInfo = {
-			.name = "Notepad++",
-			.version = "69.69.420"
-		},
-		.locale = "AT",
-		.capabilities = {
-			.workspace = {
-				.workspaceFolders = true,
-				.fileOperations = {
-					.dynamicRegistration = false,
-					.didCreate = true,
-					.willCreate = true,
-					.didRename = true,
-					.willRename = true,
-					.didDelete = true,
-					.willDelete = true
-				}
-			},
-			.textDocument = {
-				.synchronization = {
-					.dynamicRegistration = false,
-					.willSave = true,
-					.willSaveWaitUntil = false,
-					.didSave = true
-				},
-				.completion = {
-					.dynamicRegistration = false,
-					.completionItem = {
-						.snippetSupport = false,
-						.commitCharactersSupport = false,
-						.documentationFormat = {Markdown},
-						.deprecatedSupport = false,
-						.preselectSupport = false,
-						.insertReplaceSupport = false,
-						.resolveSupport = {
-							.properties = {}
-						},
-						.insertTextModeSupport = {
-							.valueSet = {AsIs, AdjustIndentation}
-						},
-						.labelDetailsSupport = false
-					},
-					.completionItemKind = {
-						.valueSet = {Text, Method, Function}
-					},
-					.contextSupport = false,
-					.insertTextMode = AsIs,
-					.completionList = {
-						.itemDefaults = {}
-					}
-				}
-			},
-			.window = {
-				.workDoneProgress = false,
-				.showMessage = {
-					.messageActionItem = {
-						.additionalPropertiesSupport = false
-					}
-				},
-				.showDocument = {
-					.support = false
-				}
-			},
-			.general = {
-				.staleRequestSupport = {
-					.cancel = false,
-					.retryOnContentModified = {}
-				},
-				.positionEncodings = {utf_8, utf_16}
-			}
-		},
-		.workspaceFolders = {
-			{
-				.uri = "C:\\Users\\hihi",
-				.name = "hihi"
-			},
-			{
-				.uri = "C:\\Users\\huhu",
-				.name = "HuHu"
-			}
-		}
-	};
-	
-	AlternativeMessageId a = {4};
-	
-	RequestMessage initMessage = {
-		.jsonrpc = "2.0",
-		.id = "why would anyone use string ids",
-		.method = "initialize",
-		.messageParams = params
-	};
-	
-	json initMessageJson = initMessage;
-	
-	std::string initMessageString = initMessageJson.dump();
-	logWrite(initMessageString.c_str());
+void testSleep(void) {
+	Sleep(1000);
+}
+
+void logSomething(void) {
+	logWrite("NPP started up");
+}
+
+void logSomethingElse(void) {
+	logWrite("Document just chaged but different");
 }

@@ -9,5 +9,8 @@ void logDocumentWriteup(void);
 void logDocumentPath(void);
 void documentOpenAction(void);
 void logInitMessage(void);
+void testSleep(void);
+void logSomething(void);
+void logSomethingElse(void);
 
 #endif

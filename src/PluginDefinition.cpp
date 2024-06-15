@@ -19,6 +19,7 @@
 #include "menuCmdID.h"
 #include "LspClientFeatures\Logging.h"
 #include "LspClientFeatures\Test.h"
+#include "LspClientFeatures\NppActions.h"
 
 //
 // The plugin data that Notepad++ needs
@@ -37,12 +38,9 @@ void pluginInit(HANDLE /*hModule*/)
 {
 	logInit();
 	
-	//Start language server
+	//Load configuration file
 	
-	
-	//Start listener thread
-	
-	//Send init message
+	//Start Language Server if it should be started at startup
 }
 
 //
@@ -50,6 +48,7 @@ void pluginInit(HANDLE /*hModule*/)
 //
 void pluginCleanUp()
 {
+	// shutdownLangServer();
 	logExit();
 }
 
@@ -58,7 +57,6 @@ void pluginCleanUp()
 // You should fill your plugins commands here
 void commandMenuInit()
 {
-
     //--------------------------------------------//
     //-- STEP 3. CUSTOMIZE YOUR PLUGIN COMMANDS --//
     //--------------------------------------------//
@@ -71,9 +69,9 @@ void commandMenuInit()
     //            );
     setCommand(0, TEXT("Hello Notepad++"), hello, NULL, false);
     setCommand(1, TEXT("Hello (with dialog)"), helloDlg, NULL, false);
-	setCommand(2, TEXT("Write to log file"), logHello, NULL, false);
-	setCommand(3, TEXT("Log document writeup"), logDocumentPath, NULL, false);
-	setCommand(4, TEXT("Log an init message"), logInitMessage, NULL, false);
+	setCommand(2, TEXT("Open config file"), openConfigFile, NULL, false);
+	setCommand(3, TEXT("Shutdown language server"), shutdownLangServer, NULL, false);
+	setCommand(4, TEXT("(Re-)Start language server"), startLangServer, NULL, false);
 }
 
 //

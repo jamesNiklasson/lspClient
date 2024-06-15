@@ -5,9 +5,12 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+#include <tchar.h>
+
 void logInit(void);
 void logExit(void);
 void logWrite(const char *msg);
+void logWrite(const TCHAR *msg);
 void logHello(void);
 
 #endif

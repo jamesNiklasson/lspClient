@@ -11,6 +11,29 @@ using json = nlohmann::json;
 #include <variant>
 #include <vector>
 
+void to_json(json& j, const LanguageId& languageId) {
+	switch (languageId) {
+		case C:
+			j = json("c");
+			break;
+		case Cpp:
+			j = json("cpp");
+			break;
+		case Csharp:
+			j = json("csharp");
+			break;
+	}
+}
+
+void to_json(json& j, const TextDocumentItem& textDocumentItem) {
+	j = json{
+		{"uri", textDocumentItem.uri},
+		{"languageId", textDocumentItem.languageId},
+		{"version", textDocumentItem.version},
+		{"text", textDocumentItem.text}
+	};
+}
+
 void to_json(json& j, const WorkspaceFolder& workspaceFolder) {
 	j = json{
 		{"uri", workspaceFolder.uri},
@@ -47,11 +70,6 @@ void to_json(json& j, const PositionEncodingKind& positionEncodingKind) {
 void to_json(json& j, const InitializeParams& initializeParams) {
 	j = json{
 		{"processId", initializeParams.processId},
-		{"clientInfo", {
-			{"name", initializeParams.clientInfo.name},
-			{"version", initializeParams.clientInfo.version}
-		}},
-		{"locale", initializeParams.locale},
 		{"capabilities", {
 			{"workspace", {
 				{"workspaceFolders", initializeParams.capabilities.workspace.workspaceFolders},
@@ -116,14 +134,35 @@ void to_json(json& j, const InitializeParams& initializeParams) {
 					{"retryOnContentModified", initializeParams.capabilities.general.staleRequestSupport.retryOnContentModified}
 				}}
 			}}
+		}}
+	};
+}
+
+void to_json(json& j, const DidChangeTextDocumentParams& didChangeTextDocumentParams) {
+	j = json{
+		{"textDocument", {
+			{"uri", didChangeTextDocumentParams.textDocument.uri},
+			{"version", didChangeTextDocumentParams.textDocument.version}
 		}},
-		{"workspaceFolders", initializeParams.workspaceFolders}
+		{"contentChanges", {{"text", didChangeTextDocumentParams.contentChanges[0].text}}}
+	};
+}
+
+void to_json(json& j, const DidOpenTextDocumentParams& didOpenTextDocumentParams) {
+	j = json{
+		{"textDocument", didOpenTextDocumentParams.textDocument}
 	};
 }
 
 void to_json(json& j, const MessageParams& messageParams) {
 	if (std::holds_alternative<InitializeParams>(messageParams)) {
 		j = json(std::get<InitializeParams>(messageParams));
+	} else if (std::holds_alternative<DidOpenTextDocumentParams>(messageParams)) {
+		j = json(std::get<DidOpenTextDocumentParams>(messageParams));
+	} else if (std::holds_alternative<DidChangeTextDocumentParams>(messageParams)) {
+		j = json(std::get<DidChangeTextDocumentParams>(messageParams));
+	} else if (std::holds_alternative<std::string>(messageParams)) {
+		j = json();
 	}
 }
 
@@ -144,6 +183,14 @@ void to_json(json& j, const RequestMessage& requestMessage) {
 		{"jsonrpc", requestMessage.jsonrpc},
 		{"id", requestMessage.id},
 		{"method", requestMessage.method},
-		{"messageParams", requestMessage.messageParams}
+		{"params", requestMessage.params}
+	};
+}
+
+void to_json(json& j, const NotificationMessage& notificationMessage) {
+	j = json{
+		{"jsonrpc", notificationMessage.jsonrpc},
+		{"method", notificationMessage.method},
+		{"params", notificationMessage.params}
 	};
 }

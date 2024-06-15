@@ -44,6 +44,8 @@
     <ClInclude Include="..\src\LspClientFeatures\Test.h" />
     <ClInclude Include="..\src\LspClientFeatures\Defines.h" />
     <ClInclude Include="..\src\LspClientFeatures\LspMessages.h" />
+    <ClInclude Include="..\src\LspClientFeatures\NppActions.h" />
+    <ClInclude Include="..\src\LspClientFeatures\ServerProcessHandling.h" />
     <ClInclude Include="..\src\nlohmann\json.hpp" />
     <ClInclude Include="..\src\nlohmann\json_fwd.hpp" />
   </ItemGroup>
@@ -55,6 +57,9 @@
     <ClCompile Include="..\src\LspClientFeatures\Logging.cpp" />
     <ClCompile Include="..\src\LspClientFeatures\Test.cpp" />
     <ClCompile Include="..\src\LspClientFeatures\LspMessages.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\NppActions.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\Defines.cpp" />
+    <ClCompile Include="..\src\LspClientFeatures\ServerProcessHandling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\DockingFeature\goLine.rc" />
